@@ -1,0 +1,19 @@
+
+case "$BOARD" in \
+                        rpi3cm) RUN echo "dtparam=spi=on" >> /boot/cmdline.txt; \
+	&& echo "dtoverlay=enc28j60" >> /boot/config.txt; \
+	&& echo "dtoverlay=uart1,txd1_pin=32" >> /boot/config.txt; \
+	&& echo "dtoverlay=uart1,rxd1_pin=33" >> /boot/config.txt; \
+	&& echo "dtparam=uart1=on" >> /boot/config.txt; \
+	&& systemctl stop serial-getty@ttyAMA0.service; \
+	&& systemctl disable serial-getty@ttyAMA0.service;
+
+	esac 
+
+RUN pkg-install \
+	libyaml
+	python-pip
+
+RUN pip install watchdog
+COPY stages/rkvm/watchdog.conf /etc/watchdog.conf
+Run systemctl enable watchdog 

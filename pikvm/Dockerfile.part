@@ -5,9 +5,16 @@ ARG KVMD_WEBTERM_VERSION
 ENV INSTALLATION $PLATFORM $USTREAMER_VERSION $KVMD_VERSION $KVMD_WEBTERM_VERSION
 RUN echo $INSTALLATION
 
+
 RUN pkg-install \
-	kvmd-platform-$PLATFORM-$BOARD \
-	kvmd-webterm \
+	git
+RUN cd /opt
+RUN git clone https://github.com/zach-r-long/kvmd.git
+RUN cd /kvmd
+RUN python3 setup.py build
+RUN python3 setup.py install 
+
+RUN pkg-install \
 	netctl \
 	parted \
 	e2fsprogs

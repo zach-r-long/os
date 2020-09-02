@@ -2,12 +2,12 @@
 
 BOARD ?= rpi4
 PLATFORM ?= v2-hdmi
-STAGES ?= __init__ os pikvm-repo watchdog ro no-audit pikvm ssh-keygen __cleanup__
+STAGES ?= __init__ os ro no-audit pikvm ssh-keygen __cleanup__
 
 HOSTNAME ?= pikvm
 LOCALE ?= en_US
 TIMEZONE ?= America/New_York
-REPO_URL = http://nj.us.mirror.archlinuxarm.org/
+REPO_URL = http://il.us.mirror.archlinuxarm.org 
 BUILD_OPTS ?=
 
 WIFI_ESSID ?=
@@ -26,7 +26,7 @@ SHELL = /bin/bash
 _BUILDER_DIR = ./.pi-builder
 
 define fetch_version
-$(shell curl --silent "https://pikvm.org/repos/$(BOARD)/latest/$(1)")
+$(shell curl --silent "https://pikvm.org/repos/$(shell echo $(BOARD) | sed -e 's/cm$$//' )/latest/$(1)")
 endef
 
 
@@ -47,8 +47,8 @@ shell: $(_BUILDER_DIR)
 
 
 os: $(_BUILDER_DIR)
-	rm -rf $(_BUILDER_DIR)/stages/{pikvm,pikvm-image,pikvm-otg-console}
-	cp -a pikvm pikvm-image pikvm-otg-console $(_BUILDER_DIR)/stages
+	rm -rf $(_BUILDER_DIR)/stages/{pikvm,pikvm-image,pikvm-otg-console,rkvm}
+	cp -a pikvm pikvm-image pikvm-otg-console rkvm $(_BUILDER_DIR)/stages
 	make -C $(_BUILDER_DIR) os \
 		NC=$(NC) \
 		BUILD_OPTS=" $(BUILD_OPTS) \
